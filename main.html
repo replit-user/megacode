@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Megacode Encoder/Decoder</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #121212;
+      color: #ffffff;
+      padding: 20px;
+    }
+    textarea, input, button, select {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+    }
+    button {
+      background-color: #00aaff;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0077aa;
+    }
+    link {
+      background-color: #000000;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Megacode Encoder/Decoder</h1>
+
+  <select id="mode">
+    <option value="encode">Encode</option>
+    <option value="decode">Decode</option>
+  </select>
+
+  <textarea id="input" rows="5" placeholder="Enter your message..."></textarea>
+
+  <button onclick="process()">Run</button>
+
+  <textarea id="output" rows="5" placeholder="Result will appear here..." readonly></textarea>
+
+  <script>
+    const replacements = {
+      ".": "GdxY", "/": "gdyZ", "\\": "GdyZ", "1": "NUMUnrtONE", "2": "NUMUnrtTWO", "3": "NUMUnrtTHREE",
+      "4": "NUMUnrtFOUR", "5": "NUMUnrtFIVE", "6": "NUMUnrtSIX", "7": "NUMUnrtSEVEN", "8": "NUMUnrtEIGHT", "9": "NUMUnrtNINE",
+      "0": "NUMUnrtZERO", "_": "Unrt", "-": "Unpy", "&": "Unag", "!": "Uepk", "@": "Uagb", "#": "Uhnl",
+      "$": "Dmkj", "%": "Pkng", "^": "Macs", "*": "Adgb", "(": "Poka", ")": "PoKa", "+": "Poim",
+      "=": "Ertb", "|": "Pefx", "?": "Qwcv", ";": "SfdX", ":": "SFDx", "'": "PQsx", ",": "CFdB",
+      "<": "AbLn", ">": "AbRn", "\"": "Qpox", "`": "PnbQ", "~": "Bxst", "{": "LcbF", "}": "RcbF",
+      "[": "Lcbf", "]": "Rcbf"
+    };
+
+    const reverseReplacements = Object.fromEntries(
+      Object.entries(replacements).map(([k, v]) => [v, k])
+    );
+
+    function caesarShift(text, shift) {
+      return text.split('').map(c => {
+        const code = c.charCodeAt(0);
+        if (c >= 'a' && c <= 'z') return String.fromCharCode((code - 97 + shift + 26) % 26 + 97);
+        if (c >= 'A' && c <= 'Z') return String.fromCharCode((code - 65 + shift + 26) % 26 + 65);
+        return c;
+      }).join('');
+    }
+
+    function megacode_encode(message) {
+      for (const [char, rep] of Object.entries(replacements)) {
+        message = message.split(char).join(rep);
+      }
+      const words = message.split(" ");
+      const indexedWords = words.map((w, i) => [i + 1, w]);
+      indexedWords.sort(() => Math.random() - 0.5);
+
+      const parts = indexedWords.map(([i, w]) => {
+        const index = (i + w.length) * 3;
+        return `${index}${caesarShift(w, 1)}`;
+      });
+
+      const symbols = [".", "/", "\\"];
+      return parts.map((p, i) => i < parts.length - 1 ? p + symbols[i % 3] : p).join('');
+    }
+
+    function megacode_decode(encoded) {
+      const parts = encoded.split(/\.|\/|\\/);
+      const restored = parts.map(part => {
+        const num = part.match(/\d+/g)?.join('') || "";
+        const word = part.replace(/\d/g, '');
+        const decoded = caesarShift(word, -1);
+        const index = parseInt(num) / 3 - decoded.length;
+        return [index, decoded];
+      });
+
+      restored.sort((a, b) => a[0] - b[0]);
+      let result = restored.map(pair => pair[1]).join(' ');
+
+      for (const [rep, char] of Object.entries(reverseReplacements)) {
+        result = result.split(rep).join(char);
+      }
+
+      return result;
+    }
+
+    function process() {
+      const mode = document.getElementById("mode").value;
+      const input = document.getElementById("input").value.trim();
+      let output = "";
+
+      if (mode === "encode") {
+        output = megacode_encode(input);
+      } else {
+        try {
+          output = megacode_decode(input);
+        } catch (e) {
+          output = "Invalid encoded message.";
+        }
+      }
+
+      document.getElementById("output").value = output;
+    }
+  </script>
+  <a id="link" href="./megacode">What megacode is</a>
+  
+<style>
+#link{ color: #4ea1f3; /* Light blue */
+  text-decoration: none;
+  font-weight: bold;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+#link::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0);
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background-color: #4ea1f3;
+  transform-origin: bottom right;
+  transition: transform 0.3s ease-out;
+}
+
+#link:hover {
+  color: #82caff; /* Lighter blue on hover */
+}
+
+#link:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
+</style>
+</body>
+</html>

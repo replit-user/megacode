@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Megacode</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0d0d0d;
+            color: #ff4c4c;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #ff6666;
+            text-align: center;
+        }
+
+        .content {
+            max-width: 800px;
+            margin: auto;
+            background-color: #1a1a1a;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px #ff4c4c33;
+        }
+
+        code {
+            display: block;
+            background-color: #111;
+            color: #ff9999;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+        }
+        a#home {
+    display: block;
+    width: fit-content;
+    margin: 30px auto 0;
+    padding: 10px 20px;
+    background-color: #ff4c4c;
+    color: #0d0d0d;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 0 10px #ff4c4c66;
+}
+
+a#home:hover {
+    background-color: #ff6666;
+    color: #ffffff;
+    transform: scale(1.05);
+}
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1>About Megacode</h1>
+        <p>
+            <strong>Megacode</strong> is an encoding method created by me to encode and decode messages. It is a
+            <em>non-deterministic code</em>, meaning the same message encoded multiple times will produce different results.
+        </p>
+        <p>Here's how to encode a message with Megacode:</p>
+        <code>
+Message: I am an encoded message
+
+1. Shuffle your words randomly:
+   → I an message encoded am
+
+2. Before each word, add the position of that word in the original sentence:
+   → 1I 3an 5message 4encoded 2am
+
+3. Add the length of the word to the number preceding it:
+   → 2I 5an 12message 11encoded 4am
+
+4. Multiply each number by 3:
+   → 6I 15an 36message 33encoded 12am
+
+5. Apply a Caesar cipher with a shift of 1:
+   → 6J 15bo 36nfttbhf 33fodpefe 12bn
+
+6. Replace spaces with symbols:
+   First space → `.`, second → `/`, third → `\`, and so on
+
+Final: 6J.15bo/36nfttbhf\33fodpefe
+        </code>
+        <p>
+            Special characters in the message should be replaced with a code <em>before</em> encoding, though in our example, none are present.
+        </p>
+    </div>
+    <a id="home" href="./main">home</a>
+</body>
+</html>
